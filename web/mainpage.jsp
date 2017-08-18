@@ -28,9 +28,6 @@
                     'url': function (node) {
                         return node.id === '#' ? '/tree/?id=%23' : '/tree/?id=' + node.id;
                     },
-                    'data': function (node) {
-                        return {'id': node.id};
-                    }
                 }
 
             },
@@ -49,12 +46,22 @@
                     "separator_after": false,
                     "label": "Create",
                     "action": function (obj) {
-                        tree.create_node('#', {"id": "ajson5", "text": "newly added"}, "last",
+
+                        tree.create_node(node, {"id": "", "text": "newly added"}, "last",
                             function () {
-                                alert("done");
-                                console.log("Hello");
+                                tree.edit(node, node.text, function (node) {
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "${pageContext.request.contextPath}/create",
+                                        data: {
+                                            "name": node.text,
+                                            "parent": tree.get_parent(node).id
+                                        }
+                                    })
+                                });
                             });
-                        console.log("done");
+
+                        tree.refresh_node(tree.get_parent(node));
                     }
                 },
                 "Rename": {
@@ -62,7 +69,18 @@
                     "separator_after": false,
                     "label": "Rename",
                     "action": function (obj) {
-                        tree.rename_node([node], "test");
+                        tree.edit(node, node.text, function (node) {
+                            $.ajax({
+                                type: "GET",
+                                url: "${pageContext.request.contextPath}/update",
+                                data: {
+                                    "id": node.id,
+                                    "name": node.text
+                                },
+                            });
+                            tree.refresh_node(tree.get_parent(node));
+                        });
+
                     }
                 },
 
@@ -72,13 +90,13 @@
                     "label": "Remove",
                     "action": function (obj) {
                         $.ajax({
-                            type : "GET",
-                            url : "${pageContext.request.contextPath}/delete",
-                            data : {
-                                "id" : node.id
+                            type: "GET",
+                            url: "${pageContext.request.contextPath}/delete",
+                            data: {
+                                "id": node.id
                             },
-                            success: function(data){
-                                if(data == true){
+                            success: function (data) {
+                                if (data == true) {
                                     tree.refresh_node(tree.get_parent(node));
                                 }
                             }
@@ -105,6 +123,9 @@
     <div class="row">
         <div id="jstree">
             <!-- Tree -->
+            <ul>
+                <li id="1">Root node 1</li>
+            </ul>
         </div>
     </div>
     <div class="row">

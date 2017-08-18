@@ -25,6 +25,12 @@ public class TreeFileServiceImpl implements TreeFileService {
     public boolean removeTreeFile(String id){return this.treeFileDao.removeTreeFile(id);}
 
     @Transactional
+    public TreeFile findById(int id){return this.treeFileDao.findById(id);}
+
+    @Transactional
+    public void renameTreeFile(String treeItemId, String new_name){treeFileDao.renameTreeFile(treeItemId,new_name);};
+
+    @Transactional
     public List<TreeFile> getChildren(String id){return  this.treeFileDao.getChildren(id);}
 
     @Transactional

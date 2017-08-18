@@ -8,7 +8,7 @@ public class TreeFile {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private int id;
 
     @Column(name = "text")
     private String text;
@@ -29,7 +29,7 @@ public class TreeFile {
     public TreeFile() {
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -52,5 +52,17 @@ public class TreeFile {
                 ", parent='" + parent + '\'' +
                 ", text='" + text + '\'' +
                 '}';
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setParent(String parent) {
+        this.parent = parent;
     }
 }

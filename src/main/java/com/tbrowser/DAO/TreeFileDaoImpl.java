@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import org.slf4j.Logger;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Repository
@@ -22,11 +23,12 @@ public class TreeFileDaoImpl implements TreeFileDAO {
     }
 
 
-    public void addTreeFile(TreeFile treeFile){
+    public void addTreeFile(@RequestBody TreeFile treeFile){
         Session session = this.sessionFactory.getCurrentSession();
         session.persist(treeFile);
         logger.info("File successfully added. File info: " + treeFile);
     };
+
 
     public boolean updateTreeFile(TreeFile treeFile){
         Session session = this.sessionFactory.getCurrentSession();
@@ -37,9 +39,11 @@ public class TreeFileDaoImpl implements TreeFileDAO {
 
     public boolean removeTreeFile(String id) {
         Session session = this.sessionFactory.getCurrentSession();
-        TreeFile treeFile = (TreeFile) session.load(TreeFile.class, new String(id));
+        int int_id = Integer.parseInt(id);
+        TreeFile treeFile = (TreeFile) session.load(TreeFile.class, new Integer(int_id));
         if (treeFile != null) {
             try {
+                session.createQuery("delete from TreeFile where parent =:p_id").setParameter("p_id",id);
                 session.delete(treeFile);
                 logger.info("File successfully deleted. Id of deleted file: " + id);
                 return true;
@@ -49,6 +53,38 @@ public class TreeFileDaoImpl implements TreeFileDAO {
     }
         return false;
     };
+
+    public void renameTreeFile(String treeItemId, String new_name){
+        TreeFile element = findById(Integer.parseInt(treeItemId));
+        if(checkDuplicates(element,new_name)){
+            element.setText(new_name);
+            updateTreeFile(element);
+        }
+    }
+
+    public boolean checkDuplicates(TreeFile treeFile, String new_name){
+        Session session = this.sessionFactory.getCurrentSession();
+
+        //REWORK to int
+        /*int number = ((Long)session.createQuery("select count(*) from TreeFile WHERE parent =:p_id and text =:name ")
+                .setParameter("p_id", treeFile.getParent())
+                .setParameter("name", new_name).uniqueResult()).intValue();*/
+
+        //Solution with list
+        List<TreeFile> number = (List<TreeFile>) session.createQuery("from TreeFile WHERE parent =:p_id and text =:name ")
+                .setParameter("p_id", treeFile.getParent())
+                .setParameter("name", new_name).list();
+        if(number.isEmpty()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public TreeFile findById(int treeItemId){
+        Session session = this.sessionFactory.getCurrentSession();
+        return  (TreeFile) session.load(TreeFile.class, new Integer(treeItemId));
+    }
 
     public List<TreeFile> getChildren(String treeItemId){
 

@@ -13,6 +13,10 @@ public interface TreeFileDAO {
 
     boolean removeTreeFile(String id);
 
+    void renameTreeFile(String treeItemId, String new_name);
+
+    TreeFile findById(int id);
+
     List<TreeFile> getChildren(String id);
 
     List<TreeFile> listTreeFiles();

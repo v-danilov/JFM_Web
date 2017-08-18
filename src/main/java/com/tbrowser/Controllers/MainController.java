@@ -6,6 +6,7 @@ import com.tbrowser.Services.TreeFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,6 +45,7 @@ public class MainController {
                 }
             }
         };
+
         //Start thread
         update.start();
         update.join();
@@ -55,16 +57,19 @@ public class MainController {
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
     public boolean createNode(HttpServletRequest request){
-
-        String id = request.getParameter("id");
-        return treeFileService.removeTreeFile(id);
+        String name = request.getParameter("name");
+        String parent = request.getParameter("parent");
+        TreeFile addItem = new TreeFile(name, parent);
+        System.out.println(addItem.getId() + " | " + name + " | " + parent);
+        return true;
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.GET)
-    public boolean updateNode(HttpServletRequest request){
+    public void updateNode(HttpServletRequest request){
 
         String id = request.getParameter("id");
-        return treeFileService.removeTreeFile(id);
+        String name = request.getParameter("name");
+        treeFileService.renameTreeFile(id,name);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
@@ -73,7 +78,4 @@ public class MainController {
         String id = request.getParameter("id");
         return treeFileService.removeTreeFile(id);
     }
-
-
-
 }

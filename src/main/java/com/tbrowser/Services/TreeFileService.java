@@ -13,6 +13,10 @@ public interface TreeFileService {
 
     boolean removeTreeFile(String id);
 
+    TreeFile findById(int id);
+
+    void renameTreeFile(String treeItemId, String new_name);
+
     List<TreeFile> getChildren(String id);
 
     List<TreeFile> listTreeFiles();
