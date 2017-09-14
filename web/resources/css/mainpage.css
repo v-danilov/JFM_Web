@@ -1,0 +1,20 @@
+.jstree-node {
+    font-size: 14pt !important;
+}
+
+.top-buffer {
+    margin-top:20px;
+}
+
+/* LOOOOOGIIIIIC!!! */
+li.jstree-open > a .jstree-icon {
+    background:url("/dist/images/closed.png") 0px 0px no-repeat !important;
+}
+
+li.jstree-closed > a .jstree-icon {
+    background:url("/dist/images/open.png") 0px 0px no-repeat !important;
+}
+
+li.jstree-leaf > a .jstree-icon {
+    background:url("/dist/images/leaf.png") 0px 0px no-repeat !important;
+}
