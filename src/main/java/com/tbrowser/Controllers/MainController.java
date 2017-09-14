@@ -60,8 +60,22 @@ public class MainController {
         String name = request.getParameter("name");
         String parent = request.getParameter("parent");
         TreeFile addItem = new TreeFile(name, parent);
+        System.out.println(addItem);
         System.out.println(addItem.getId() + " | " + name + " | " + parent);
         return true;
+    }
+
+    @RequestMapping(value = "/check_name", method = RequestMethod.GET)
+    public boolean check_node_name(HttpServletRequest request){
+        String node_name = request.getParameter("name");
+        String parent_node = request.getParameter("parent");
+        TreeFile checkElement = treeFileService.findByName(node_name,parent_node);
+        if(checkElement == null){
+            TreeFile add_element = new TreeFile(node_name,parent_node);
+            treeFileService.addTreeFile(add_element);
+            return true;
+        }
+        return false;
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.GET)

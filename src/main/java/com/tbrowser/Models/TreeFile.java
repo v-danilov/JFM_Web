@@ -7,7 +7,7 @@ public class TreeFile {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @Column(name = "text")
@@ -64,5 +64,27 @@ public class TreeFile {
 
     public void setParent(String parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TreeFile treeFile = (TreeFile) o;
+
+        if (id != treeFile.id) return false;
+        if (children != treeFile.children) return false;
+        if (!text.equals(treeFile.text)) return false;
+        return parent.equals(treeFile.parent);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + text.hashCode();
+        result = 31 * result + parent.hashCode();
+        result = 31 * result + (children ? 1 : 0);
+        return result;
     }
 }

@@ -28,6 +28,9 @@ public class TreeFileServiceImpl implements TreeFileService {
     public TreeFile findById(int id){return this.treeFileDao.findById(id);}
 
     @Transactional
+    public TreeFile findByName(String name, String parent){return treeFileDao.findByName(name, parent);}
+
+    @Transactional
     public void renameTreeFile(String treeItemId, String new_name){treeFileDao.renameTreeFile(treeItemId,new_name);};
 
     @Transactional

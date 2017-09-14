@@ -6,10 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="JFM Web" />
         <module name="TreeBrowser" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="JFM Web" target="1.5" />
       <module name="TreeBrowser" target="1.5" />
     </bytecodeTargetLevel>
   </component>

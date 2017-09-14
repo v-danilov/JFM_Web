@@ -17,6 +17,8 @@ public interface TreeFileDAO {
 
     TreeFile findById(int id);
 
+    TreeFile findByName(String name, String parent);
+
     List<TreeFile> getChildren(String id);
 
     List<TreeFile> listTreeFiles();

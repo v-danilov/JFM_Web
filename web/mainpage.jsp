@@ -43,25 +43,26 @@
             var items = {
                 "Create": {
                     "separator_before": false,
-                    "separator_after": false,
+                    "separator_after": true,
                     "label": "Create",
                     "action": function (obj) {
-
-                        tree.create_node(node, {"id": "", "text": "newly added"}, "last",
-                            function () {
-                                tree.edit(node, node.text, function (node) {
-                                    $.ajax({
-                                        type: "GET",
-                                        url: "${pageContext.request.contextPath}/create",
-                                        data: {
-                                            "name": node.text,
-                                            "parent": tree.get_parent(node).id
-                                        }
-                                    })
-                                });
+                        let name = window.prompt("Input new node name", "");
+                        if(name !== null && name !== ""){
+                            $.ajax({
+                                type: "GET",
+                                url: "${pageContext.request.contextPath}/check_name",
+                                data: {
+                                    "name": name,
+                                    "parent": node.id
+                                },
+                                success : function(resp)
+                                {
+                                    if(resp === true){
+                                        tree.refresh_node(node);
+                                    }
+                                }
                             });
-
-                        tree.refresh_node(tree.get_parent(node));
+                        }
                     }
                 },
                 "Rename": {
@@ -113,6 +114,11 @@
         });
     });
 
+    function updateTree() {
+        var tree = $('#jstree').jstree(true);
+        tree.refresh();
+    };
+
 
 </script>
 <head>
@@ -129,7 +135,7 @@
         </div>
     </div>
     <div class="row">
-        <button type="button" class="btn btn-primary"> Sync &#8635;</button>
+        <button type="button" onclick="updateTree()" class="btn btn-primary"> Sync &#8635;</button>
     </div>
     <div class="row">
         <a href="https://www.jstree.com/docs/json/">jsTree docs</a>

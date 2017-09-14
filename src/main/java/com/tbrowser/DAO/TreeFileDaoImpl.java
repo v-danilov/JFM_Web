@@ -23,7 +23,7 @@ public class TreeFileDaoImpl implements TreeFileDAO {
     }
 
 
-    public void addTreeFile(@RequestBody TreeFile treeFile){
+    public void addTreeFile(TreeFile treeFile){
         Session session = this.sessionFactory.getCurrentSession();
         session.persist(treeFile);
         logger.info("File successfully added. File info: " + treeFile);
@@ -85,6 +85,15 @@ public class TreeFileDaoImpl implements TreeFileDAO {
         Session session = this.sessionFactory.getCurrentSession();
         return  (TreeFile) session.load(TreeFile.class, new Integer(treeItemId));
     }
+
+    public TreeFile findByName(String name, String parent){
+        Session session = this.sessionFactory.getCurrentSession();
+        TreeFile tf = (TreeFile) session.createQuery("from TreeFile where text =:text_name and parent =:parent_id")
+                .setParameter("text_name", name)
+                .setParameter("parent_id", parent).uniqueResult();
+        return tf;
+    }
+
 
     public List<TreeFile> getChildren(String treeItemId){
 
