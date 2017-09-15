@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $('#jstree').jstree({
-        "plugins": ["sort", "themes", "json_data", "dnd", "contextmenu"],
+        "plugins": ["sort", "themes", "unique", "json_data", "dnd", "contextmenu"],
 
         'core': {
             'check_callback': true,
@@ -54,15 +54,20 @@ $(document).ready(function () {
                 "label": "Rename",
                 "action": function (obj) {
                     tree.edit(node, node.text, function (node) {
+                        var node_data = {};
+                        node_data["id"] = node.id;
+                        node_data["text"] = node.text;
+                        node_data["parent"] = tree.get_parent(node);
                         $.ajax({
-                            type: "GET",
+                            type: "POST",
+                            contentType: "application/json",
                             url: "/update",
-                            data: {
-                                "id": node.id,
-                                "name": node.text
-                            },
+                            data: JSON.stringify(node_data),
+                            dataType: 'json'
+                        }).always(function(){
+                            tree.refresh_node(tree.get_parent(node));
                         });
-                        tree.refresh_node(tree.get_parent(node));
+                        //tree.refresh_node(tree.get_parent(node));
                     });
 
                 }
@@ -80,7 +85,7 @@ $(document).ready(function () {
                             "id": node.id
                         },
                         success: function (data) {
-                            if (data == true) {
+                            if (data === true) {
                                 tree.refresh_node(tree.get_parent(node));
                             }
                         }
@@ -92,12 +97,32 @@ $(document).ready(function () {
     }
 
     $('#jstree').on('after_close.jstree', function (event, data) {
-        // Flag it to be reloaded on reopen:
+        // Reload on open -> update
         data.node.state.loaded = false;
     });
+
+    $(document).on('move_node.jstree', function (e, data) {
+
+        let node_data = {};
+        node_data["id"] = $('#' + data.node.id).find('a')[0].id;
+        node_data["text"] = _node.text;
+        node_data["parent"] = $('#' + data.parent).find('a')[0].id;
+        alert(node_data.id + node_data.text + node_data.parent);
+
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/update",
+            data: JSON.stringify(node_data),
+            dataType: 'json'
+        }).always(function(){
+            tree.refresh_node(tree.get_parent(_node));
+        });
+    });
 });
+
 
 function updateTree() {
     var tree = $('#jstree').jstree(true);
     tree.refresh();
-};
+}

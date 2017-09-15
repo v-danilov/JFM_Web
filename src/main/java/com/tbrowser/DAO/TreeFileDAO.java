@@ -13,7 +13,9 @@ public interface TreeFileDAO {
 
     boolean removeTreeFile(String id);
 
-    void renameTreeFile(String treeItemId, String new_name);
+    //void updateTreeFileWithDuplicatesCheck(TreeFile treeFile);
+
+    boolean checkDuplicates(TreeFile treeFile);
 
     TreeFile findById(int id);
 

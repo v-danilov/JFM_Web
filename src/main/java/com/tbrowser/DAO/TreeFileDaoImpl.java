@@ -54,15 +54,13 @@ public class TreeFileDaoImpl implements TreeFileDAO {
         return false;
     };
 
-    public void renameTreeFile(String treeItemId, String new_name){
-        TreeFile element = findById(Integer.parseInt(treeItemId));
-        if(checkDuplicates(element,new_name)){
-            element.setText(new_name);
-            updateTreeFile(element);
+    /*public void updateTreeFileWithDuplicatesCheck(TreeFile treeFile){
+        if(checkDuplicates(treeFile,treeFile.getText())){
+            updateTreeFile(treeFile);
         }
-    }
+    }*/
 
-    public boolean checkDuplicates(TreeFile treeFile, String new_name){
+    public boolean checkDuplicates(TreeFile treeFile){
         Session session = this.sessionFactory.getCurrentSession();
 
         //REWORK to int
@@ -73,7 +71,7 @@ public class TreeFileDaoImpl implements TreeFileDAO {
         //Solution with list
         List<TreeFile> number = (List<TreeFile>) session.createQuery("from TreeFile WHERE parent =:p_id and text =:name ")
                 .setParameter("p_id", treeFile.getParent())
-                .setParameter("name", new_name).list();
+                .setParameter("name", treeFile.getText()).list();
         if(number.isEmpty()) {
             return true;
         }

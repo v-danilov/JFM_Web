@@ -4,8 +4,6 @@ package com.tbrowser.Controllers;
 import com.tbrowser.Models.TreeFile;
 import com.tbrowser.Services.TreeFileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -38,7 +35,7 @@ public class MainController {
             public void run() {
                 try {
                     //Delay 2sec
-                    Thread.sleep(2000);
+                    Thread.sleep(10);
 
                 } catch (InterruptedException ie) {
                     System.err.println(ie.getMessage());
@@ -78,12 +75,20 @@ public class MainController {
         return false;
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.GET)
+    //Get update
+   /* @RequestMapping(value = "/update", method = RequestMethod.GET)
     public void updateNode(HttpServletRequest request){
 
         String id = request.getParameter("id");
         String name = request.getParameter("name");
-        treeFileService.renameTreeFile(id,name);
+        treeFileService.updateTreeFileWithDuplicatesCheck(id,name);
+    }*/
+
+    //Post update
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public void updateNode(@RequestBody TreeFile treeFile){
+        System.out.println(treeFile);
+        treeFileService.updateTreeFileWithDuplicatesCheck(treeFile);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET)

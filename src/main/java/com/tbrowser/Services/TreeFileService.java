@@ -15,7 +15,7 @@ public interface TreeFileService {
 
     TreeFile findById(int id);
 
-    void renameTreeFile(String treeItemId, String new_name);
+    void updateTreeFileWithDuplicatesCheck(TreeFile treeFile);
 
     TreeFile findByName(String name, String parent);
 
